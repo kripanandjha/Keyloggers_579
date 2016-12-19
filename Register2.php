@@ -6,15 +6,20 @@
 	$mobile = $_POST["MobileId"];
 	$username = $_POST["username"];
 	$name = $_POST["name"];
-	$password = $_POST["password"];
+    $password = $_POST["password"];
+	$privateKey = $_POST["privateKey"];
+    $publicKey = $_POST["publicKey"];
+    $salt = $_POST["salt"];
+    $iv = $_POST["iv"];
 
      function registerUser() {
-        global $connect, $name, $mobile, $username, $password;
+        global $connect, $name, $mobile, $username, $password,$privateKey,$publicKey,$salt,$iv;
         $passwordHash = password_hash($password, PASSWORD_DEFAULT);
-        $statement = mysqli_prepare($connect, "INSERT INTO users (name, mobile, username, password) VALUES (?, ?, ?, ?)");
-        mysqli_stmt_bind_param($statement, "ssss", $name, $mobile, $username, $passwordHash);
+        $statement = mysqli_prepare($connect, "INSERT INTO users (name, mobile, username, password,privateKey,publicKey,salt,iv) VALUES (?, ?, ?, ?,?, ?, ?, ?)");
+        mysqli_stmt_bind_param($statement, "ssssssss", $name, $mobile, $username, $passwordHash,$privateKey,$publicKey,$salt,$iv);
         mysqli_stmt_execute($statement);
-        mysqli_stmt_close($statement);     
+        mysqli_stmt_close($statement);
+         $response["stat"] = $statement;
     }
 
     function usernameAvailable() {
